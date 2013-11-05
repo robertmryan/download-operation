@@ -20,6 +20,7 @@
 		8315984B17A946CC00A4CB53 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8315984817A946CC00A4CB53 /* ViewController.m */; };
 		8315984F17A946E200A4CB53 /* DownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8315984E17A946E200A4CB53 /* DownloadOperation.m */; };
 		8315985217A97E5300A4CB53 /* DownloadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8315985117A97E5300A4CB53 /* DownloadCell.m */; };
+		838BA11B18287F750028D29A /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 838BA11A18287F750028D29A /* LICENSE */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		8315985017A97E5300A4CB53 /* DownloadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadCell.h; sourceTree = "<group>"; };
 		8315985117A97E5300A4CB53 /* DownloadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadCell.m; sourceTree = "<group>"; };
 		8315988217A9AD3800A4CB53 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		838BA11A18287F750028D29A /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				8315988217A9AD3800A4CB53 /* README.md */,
+				838BA11A18287F750028D29A /* LICENSE */,
 				8315982317A9460200A4CB53 /* Download Operation */,
 				8315981C17A9460100A4CB53 /* Frameworks */,
 				8315981B17A9460100A4CB53 /* Products */,
@@ -186,6 +189,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				838BA11B18287F750028D29A /* LICENSE in Resources */,
 				8315982817A9460200A4CB53 /* InfoPlist.strings in Resources */,
 				8315983017A9460200A4CB53 /* Default.png in Resources */,
 				8315983217A9460200A4CB53 /* Default@2x.png in Resources */,
