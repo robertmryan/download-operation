@@ -10,18 +10,20 @@
 
 @interface DownloadOperation () <NSURLConnectionDataDelegate, NSURLConnectionDelegate>
 
-@property (nonatomic, getter = isExecuting) BOOL executing;
-@property (nonatomic, getter = isFinished)  BOOL finished;
+@property (nonatomic, readwrite, getter = isExecuting) BOOL executing;
+@property (nonatomic, readwrite, getter = isFinished)  BOOL finished;
 
 @property (nonatomic, strong) NSOutputStream *outputStream;
 @property (nonatomic, weak)   NSURLConnection *connection;
 @property (nonatomic, strong) NSString *tempPath;
 @property (nonatomic, strong) NSError *error;
 
-
 @end
 
 @implementation DownloadOperation
+
+@synthesize executing = _executing;
+@synthesize finished  = _finished;
 
 - (id)initWithURL:(NSURL *)url path:(NSString *)path
 {
