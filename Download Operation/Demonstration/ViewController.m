@@ -30,11 +30,11 @@
 
     self.downloads = [NSMutableArray array];
 
-    NSArray *filenames = @[@"image1.jpg", @"file2.pdf"];
+    NSArray *filenames = @[@"as17-134-20380.jpg", @"as17-140-21497.jpg", @"as17-148-22727.jpg"];
 
     for (NSString *filename in filenames)
     {
-        NSString *urlString = [@"http://you.url.goes.here" stringByAppendingPathComponent:filename];
+        NSString *urlString = [@"http://spaceflight.nasa.gov/gallery/images/apollo/apollo17/hires" stringByAppendingPathComponent:filename];
         NSURL *url = [NSURL URLWithString:urlString];
         
         DownloadOperation *downloadOperation = [[DownloadOperation alloc] initWithURL:url];
