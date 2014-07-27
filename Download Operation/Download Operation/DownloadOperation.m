@@ -215,6 +215,7 @@
 
     // finish this operation
 
+    self.executing = NO;
     self.finished = YES;
 
     return success;
