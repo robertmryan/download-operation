@@ -82,18 +82,20 @@
     return YES;
 }
 
-- (void)setExecuting:(BOOL)executing
-{
-    [self willChangeValueForKey:@"isExecuting"];
-    _executing = executing;
-    [self didChangeValueForKey:@"isExecuting"];
+- (void)setExecuting:(BOOL)executing {
+    if (executing != _executing) {
+        [self willChangeValueForKey:@"isExecuting"];
+        _executing = executing;
+        [self didChangeValueForKey:@"isExecuting"];
+    }
 }
 
-- (void)setFinished:(BOOL)finished
-{
-    [self willChangeValueForKey:@"isFinished"];
-    _finished = finished;
-    [self didChangeValueForKey:@"isFinished"];
+- (void)setFinished:(BOOL)finished {
+    if (finished != _finished) {
+        [self willChangeValueForKey:@"isFinished"];
+        _finished = finished;
+        [self didChangeValueForKey:@"isFinished"];
+    }
 }
 
 #pragma mark - Download thread methods
@@ -121,25 +123,9 @@
 
 #pragma mark - Private methods
 
-- (NSString *)pathForTemporaryFileWithPrefix:(NSString *)prefix
-{
-    NSString *  result;
-    CFUUIDRef   uuid;
-    CFStringRef uuidStr;
-
-    uuid = CFUUIDCreate(NULL);
-    assert(uuid != NULL);
-
-    uuidStr = CFUUIDCreateString(NULL, uuid);
-    assert(uuidStr != NULL);
-
-    result = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@", prefix, uuidStr]];
-    assert(result != nil);
-
-    CFRelease(uuidStr);
-    CFRelease(uuid);
-
-    return result;
+- (NSString *)pathForTemporaryFileWithPrefix:(NSString *)prefix {
+    NSString *uuidString = [[NSUUID UUID] UUIDString];
+    return [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@", prefix, uuidString]];
 }
 
 - (BOOL)createFolderForPath:(NSString *)filePath
