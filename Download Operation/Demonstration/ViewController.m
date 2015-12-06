@@ -31,9 +31,8 @@
     self.downloads = [NSMutableArray array];
 
     NSArray *filenames = @[@"as17-134-20380.jpg", @"as17-140-21497.jpg", @"as17-148-22727.jpg"];
-
-    for (NSString *filename in filenames)
-    {
+    
+    for (NSString *filename in filenames)  {
         NSString *urlString = [@"http://spaceflight.nasa.gov/gallery/images/apollo/apollo17/hires" stringByAppendingPathComponent:filename];
         NSURL *url = [NSURL URLWithString:urlString];
         
@@ -58,8 +57,7 @@
             if (row == NSNotFound) return;
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
             DownloadCell *cell = (id)[self.tableView cellForRowAtIndexPath:indexPath];
-            if (cell)
-            {
+            if (cell) {
                 CGFloat progress = (expectedContentLength > 0 ? (CGFloat) progressContentLength / (CGFloat) expectedContentLength : (progressContentLength % 1000000l) / 1000000.0f);
                 [cell.downloadProgressView setProgress:progress animated:YES];
             }
@@ -71,18 +69,11 @@
 
 #pragma mark - UITableViewDataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.downloads count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"Cell";
     DownloadCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 
@@ -96,8 +87,7 @@
 
 #pragma mark - Buttons
 
-- (IBAction)touchUpInsideCancelButton:(id)sender
-{
+- (IBAction)touchUpInsideCancelButton:(id)sender {
     [self.downloadQueue cancelAllOperations];
     [self.downloads removeAllObjects];
     [self.tableView reloadData];

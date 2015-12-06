@@ -25,8 +25,7 @@
 @synthesize executing = _executing;
 @synthesize finished  = _finished;
 
-- (id)initWithURL:(NSURL *)url path:(NSString *)path
-{
+- (id)initWithURL:(NSURL *)url path:(NSString *)path {
     self = [super init];
     if (self) {
         _url = url;
@@ -41,22 +40,19 @@
     return self;
 }
 
-- (id)initWithURL:(NSURL *)url
-{
+- (id)initWithURL:(NSURL *)url {
     return [self initWithURL:url path:nil];
 }
 
 #pragma mark - NSOperation methods
 
-- (void)start
-{
+- (void)start {
     if ([self isCancelled]) {
         self.finished = YES;
         return;
     }
 
-    if (!self.path)
-    {
+    if (!self.path) {
         NSString *docsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
         self.path = [docsPath stringByAppendingPathComponent:[self.url lastPathComponent]];
     }
@@ -68,8 +64,7 @@
     [self performSelector:@selector(startInNetworkThread) onThread:[[self class] networkRequestThread] withObject:nil waitUntilDone:NO];
 }
 
-- (void)startInNetworkThread
-{
+- (void)startInNetworkThread {
     NSURLRequest *request = [NSURLRequest requestWithURL:self.url];
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -77,8 +72,7 @@
     self.connection = connection;
 }
 
-- (BOOL)isConcurrent
-{
+- (BOOL)isConcurrent {
     return YES;
 }
 
@@ -135,16 +129,14 @@
     NSString *folder = [filePath stringByDeletingLastPathComponent];
     BOOL isDirectory;
 
-    if (![fileManager fileExistsAtPath:folder isDirectory:&isDirectory])
-    {
+    if (![fileManager fileExistsAtPath:folder isDirectory:&isDirectory]) {
         // if folder doesn't exist, try to create it
 
         [fileManager createDirectoryAtPath:folder withIntermediateDirectories:YES attributes:nil error:&error];
 
         // if fail, report error
 
-        if (error)
-        {
+        if (error) {
             self.error = error;
 
             return FALSE;
@@ -153,9 +145,7 @@
         // directory successfully created
 
         return TRUE;
-    }
-    else if (!isDirectory)
-    {
+    } else if (!isDirectory) {
         self.error = [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
                                          code:-1
                                      userInfo:@{
@@ -192,8 +182,7 @@
 
     // if caller wanted to know about success or failure, then inform it
 
-    if (self.downloadCompletionBlock)
-    {
+    if (self.downloadCompletionBlock) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.downloadCompletionBlock(self, success, self.error);
         });
@@ -212,13 +201,10 @@
     NSError *error;
     NSFileManager *fileManager = [NSFileManager defaultManager];
 
-    if (self.tempPath)
-    {
-        if ([fileManager fileExistsAtPath:self.tempPath])
-        {
+    if (self.tempPath) {
+        if ([fileManager fileExistsAtPath:self.tempPath]) {
             [[NSFileManager defaultManager] removeItemAtPath:self.tempPath error:&error];
-            if (error)
-            {
+            if (error)  {
                 self.error = error;
 
                 return NO;
@@ -229,21 +215,17 @@
     return YES;
 }
 
-- (BOOL)saveDownloadedFile
-{
+- (BOOL)saveDownloadedFile {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *error;
 
-    if (![self createFolderForPath:self.path])
-    {
+    if (![self createFolderForPath:self.path]) {
         return NO;
     }
 
-    if ([fileManager fileExistsAtPath:self.path])
-    {
+    if ([fileManager fileExistsAtPath:self.path]) {
         [fileManager removeItemAtPath:self.path error:&error];
-        if (error)
-        {
+        if (error) {
             self.error = error;
 
             return NO;
@@ -251,8 +233,7 @@
     }
 
     [fileManager moveItemAtPath:self.tempPath toPath:self.path error:&error];
-    if (error)
-    {
+    if (error) {
         self.error = error;
         
         return NO;
@@ -265,24 +246,19 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    if ([self isCancelled])
-    {
+    if ([self isCancelled]) {
         [self completeWithSuccess:NO];
         return;
     }
 
-    if ([response isKindOfClass:[NSHTTPURLResponse class]])
-    {
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSHTTPURLResponse *httpResponse = (id)response;
 
         NSInteger statusCode = [httpResponse statusCode];
 
-        if (statusCode == 200)
-        {
+        if (statusCode == 200) {
             self.expectedContentLength = [response expectedContentLength];
-        }
-        else if (statusCode >= 400)
-        {
+        } else if (statusCode >= 400) {
             self.error = [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
                                              code:statusCode
                                          userInfo:@{
@@ -295,9 +271,7 @@
 
             return;
         }
-    }
-    else
-    {
+    } else {
         self.expectedContentLength = -1;
     }
 
@@ -305,31 +279,28 @@
     [self.outputStream open];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     const uint8_t *buffer = [data bytes];
     NSUInteger bytesRemaining = [data length];
     NSInteger bytesWritten;
 
-    if ([self isCancelled])
-    {
+    if ([self isCancelled]) {
         [self completeWithSuccess:NO];
         return;
     }
 
-    while (bytesRemaining != 0)
-    {
+    while (bytesRemaining != 0) {
         bytesWritten = [self.outputStream write:buffer maxLength:bytesRemaining];
         if (bytesWritten < 0) {
 
             self.error = [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
-                                                 code:-1
-                                             userInfo:@{
-                                                          @"message"  : @"Unable to write bytes",
-                                                          @"function" : @(__FUNCTION__),
-                                                          @"url"      : [self.url absoluteString]
-                                                      }];
-
+                                             code:-1
+                                         userInfo:@{
+                                                    @"message"  : @"Unable to write bytes",
+                                                    @"function" : @(__FUNCTION__),
+                                                    @"url"      : [self.url absoluteString]
+                                                    }];
+            
             [self completeWithSuccess:NO];
 
             return;
@@ -341,23 +312,20 @@
 
     self.progressContentLength += [data length];
 
-    if (self.downloadProgressBlock)
-    {
+    if (self.downloadProgressBlock) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.downloadProgressBlock(self, self.progressContentLength, self.expectedContentLength);
         });
     }
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     self.error = error;
     
     [self completeWithSuccess:NO];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     self.error = nil;
 
     [self completeWithSuccess:YES];
